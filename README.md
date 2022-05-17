@@ -2,4 +2,5 @@
 
 
 ## Third-party Libraries
-- OpenCASCADE-wasm
+- ThirdParty/OpenCASCADE-wasm-7.6.0
+- emsdk (should install by yourself - [Emscripten](https://emscripten.org/docs/getting_started/downloads.html))
