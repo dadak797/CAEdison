@@ -1,0 +1,34 @@
+{
+  "name": "caedison",
+  "version": "1.0.0",
+  "description": "Web-based CAE Platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/init.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dadak797/CAEdison.git"
+  },
+  "keywords": [
+    "OCCT-wasm",
+    "CAE"
+  ],
+  "author": "dadak797",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dadak797/CAEdison/issues"
+  },
+  "homepage": "https://github.com/dadak797/CAEdison#readme",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.12",
+    "@babel/node": "^7.17.10",
+    "@babel/preset-env": "^7.17.12",
+    "nodemon": "^2.0.16"
+  }
+}
