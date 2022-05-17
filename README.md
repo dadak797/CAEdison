@@ -1,3 +1,6 @@
-EDISON 2.0
+# EDISON 2.0
 
-OpenCASCADE-wasm
+---
+
+## Third-party Libraries
+- OpenCASCADE-wasm
