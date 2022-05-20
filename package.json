@@ -4,7 +4,12 @@
   "description": "Web-based CAE Platform",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/init.js"
+    "start-server": "nodemon --exec babel-node src/init.js",
+    "make-proj": "emcmake cmake -G\"Unix Makefiles\" -Sbuild-wasm -B\"build-wasm/build\" -DOpenCASCADE_INCLUDE_DIR=\"../ThirdParty/OCCT-wasm-7.6.0/inc\" -DOpenCASCADE_LIBRARY_DIR=\"../ThirdParty/OCCT-wasm-7.6.0/lib\"",
+    "build-wasm": "cmake --build build-wasm/build",
+    "replace-wasm": "rm src/views/occt-webgl-sample.js src/views/occt-webgl-sample.wasm && cp build-wasm/build/occt-webgl-sample.js build-wasm/build/occt-webgl-sample.wasm src/views/",
+    "copy-wasm": "cp build-wasm/build/occt-webgl-sample.js build-wasm/build/occt-webgl-sample.wasm src/views/",
+    "rm-build": "rm -rf build-wasm/build"
   },
   "repository": {
     "type": "git",
@@ -21,7 +26,6 @@
   },
   "homepage": "https://github.com/dadak797/CAEdison#readme",
   "dependencies": {
-    "ejs": "^3.1.8",
     "express": "^4.18.1",
     "morgan": "^1.10.0"
   },

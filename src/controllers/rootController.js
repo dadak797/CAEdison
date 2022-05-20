@@ -1,3 +1,3 @@
 export const home = (req, res) => {
-    return res.render("home.html");
+    return res.sendFile(process.cwd() + "/src/views/occt-webgl-sample.html");
 }
