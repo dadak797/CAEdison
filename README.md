@@ -16,10 +16,10 @@
 6. npm run rm-build: Remove build-wasm/build folder
 
 ### Script Order for the First Time
-1 &rarr 2 &rarr 3 &rarr 5
+1 &rarr; 2 &rarr; 3 &rarr; 5
 
 ### Script Order for the Second Time (C/C++ files are modified)
-2 &rarr 4 &rarr 5
+2 &rarr; 4 &rarr; 5
 
 ### Script Order for the Second Time (C/C++ files are added)
-Modify CMakeLists.txt &rarr 6 &rarr 1 &rarr 2 &rarr 4 &rarr 5
+Modify CMakeLists.txt &rarr; 6 &rarr; 1 &rarr; 2 &rarr; 4 &rarr; 5
