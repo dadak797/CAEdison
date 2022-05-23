@@ -1749,8 +1749,8 @@ var tempI64;
 // === Body ===
 
 var ASM_CONSTS = {
-  2969336: function() {Module['noExitRuntime'] = true},  
- 2969367: function($0, $1, $2, $3) {Module.ctx.getBufferSubData($0, $1, HEAPU8.subarray($2, $2 + $3));}
+  2969256: function() {Module['noExitRuntime'] = true},  
+ 2969287: function($0, $1, $2, $3) {Module.ctx.getBufferSubData($0, $1, HEAPU8.subarray($2, $2 + $3));}
 };
 function OSD_MemInfo_getModuleHeapLength(){ return Module.HEAP8.length; }
 function jsGetBoundingClientLeft(){ return Math.round(Module._myCanvasRect.left); }
