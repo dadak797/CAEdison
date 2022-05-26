@@ -829,8 +829,13 @@ void WasmOcctView::projectionOrthographic()
 // ================================================================
 void WasmOcctView::selectFaceMode()
 {
-  	WasmOcctView::Instance().Context()->Deactivate();
-    WasmOcctView::Instance().Context()->Activate(AIS_Shape::SelectionMode(TopAbs_FACE));
+    WasmOcctView& aViewer = Instance();
+    for (NCollection_IndexedDataMap<TCollection_AsciiString, Handle(AIS_InteractiveObject)>::Iterator anObjIter (aViewer.myObjects);
+         anObjIter.More(); anObjIter.Next())
+    {
+        aViewer.Context()->Deactivate(anObjIter.Value(), false);
+        aViewer.Context()->Activate(anObjIter.Value(), AIS_Shape::SelectionMode(TopAbs_FACE));
+    }
 }
 
 
@@ -840,8 +845,13 @@ void WasmOcctView::selectFaceMode()
 // ================================================================
 void WasmOcctView::selectSolidMode()
 {
-  	WasmOcctView::Instance().Context()->Deactivate();
-    WasmOcctView::Instance().Context()->Activate(AIS_Shape::SelectionMode(TopAbs_SOLID));
+    WasmOcctView& aViewer = Instance();
+    for (NCollection_IndexedDataMap<TCollection_AsciiString, Handle(AIS_InteractiveObject)>::Iterator anObjIter (aViewer.myObjects);
+         anObjIter.More(); anObjIter.Next())
+    {
+        aViewer.Context()->Deactivate(anObjIter.Value(), false);
+        aViewer.Context()->Activate(anObjIter.Value(), AIS_Shape::SelectionMode(TopAbs_SOLID));
+    }
 }
 
 
