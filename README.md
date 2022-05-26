@@ -23,3 +23,6 @@
 
 ### Script Order for the Second Time (C/C++ files are added)
 Modify CMakeLists.txt &rarr; 6 &rarr; 1 &rarr; 2 &rarr; 4 &rarr; 5
+
+### Install node_modules
+npm install
