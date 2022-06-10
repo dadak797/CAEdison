@@ -293,7 +293,7 @@ void GeometryManager::DisplayGeometry(GEOMETRY_NODE node, int depth)
     if (!shape.IsNull()) {
         const TopoDS_Shape aShape = shape->Shape();
         if (aShape.ShapeType() == TopAbs_SOLID) {
-            viewer.Context()->Display(shape, false);    
+            viewer.Context()->Display(shape, false);
         }
     }
 }
@@ -311,19 +311,20 @@ void GeometryManager::SelectFace(GEOMETRY_NODE node, int depth)
     if (!shape.IsNull()) {
         const TopoDS_Shape aShape = shape->Shape();
         if (aShape.ShapeType() == TopAbs_SOLID) {
-            viewer.Context()->Deactivate(shape, false);
+            viewer.Context()->Deactivate(shape, AIS_Shape::SelectionMode(viewer.GetSelectionMode()));
             viewer.Context()->Activate(shape, AIS_Shape::SelectionMode(TopAbs_FACE));
+            viewer.SetSelectionMode(TopAbs_FACE);
         }
     }
 }
 
 void GeometryManager::SelectFaceMode()
 {
-    //m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::SelectFace);
+    m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::SelectFace);
 
-    WasmOcctView& viewer = WasmOcctView::Instance();
-    viewer.Context()->Deactivate();
-    viewer.Context()->Activate(AIS_Shape::SelectionMode(TopAbs_FACE));
+    //WasmOcctView& viewer = WasmOcctView::Instance();
+    //viewer.Context()->Deactivate();
+    //viewer.Context()->Activate(AIS_Shape::SelectionMode(TopAbs_FACE));
 
     Message::DefaultMessenger()->Send(TCollection_AsciiString("FaceMode"), Message_Info);
 }
@@ -336,19 +337,20 @@ void GeometryManager::SelectSolid(GEOMETRY_NODE node, int depth)
     if (!shape.IsNull()) {
         const TopoDS_Shape aShape = shape->Shape();
         if (aShape.ShapeType() == TopAbs_SOLID) {
-            viewer.Context()->Deactivate(shape, false);
+            viewer.Context()->Deactivate(shape, AIS_Shape::SelectionMode(viewer.GetSelectionMode()));
             viewer.Context()->Activate(shape, AIS_Shape::SelectionMode(TopAbs_SOLID));
+            viewer.SetSelectionMode(TopAbs_SOLID);
         }
     }
 }
 
 void GeometryManager::SelectSolidMode()
 {
-    //m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::SelectSolid);
+    m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::SelectSolid);
 
-    WasmOcctView& viewer = WasmOcctView::Instance();
-    viewer.Context()->Deactivate();
-    viewer.Context()->Activate(AIS_Shape::SelectionMode(TopAbs_SOLID));
+    //WasmOcctView& viewer = WasmOcctView::Instance();
+    //viewer.Context()->Deactivate();
+    //viewer.Context()->Activate(AIS_Shape::SelectionMode(TopAbs_SOLID));
 
     Message::DefaultMessenger()->Send(TCollection_AsciiString("SolidMode"), Message_Info);
 }

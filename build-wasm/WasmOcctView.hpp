@@ -137,6 +137,12 @@ public:
   //! Request view redrawing.
   void UpdateView();
 
+    // Getters
+    TopAbs_ShapeEnum GetSelectionMode() const { return m_SelectionMode; }
+  
+    // Setters
+    void SetSelectionMode(TopAbs_ShapeEnum mode) { m_SelectionMode = mode; }
+
 private:
 
   //! Create window.
@@ -265,6 +271,8 @@ private:
   Graphic3d_Vec2i                myWinSizeOld;
   float                          myDevicePixelRatio; //!< device pixel ratio for handling high DPI displays
   unsigned int                   myUpdateRequests;   //!< counter for unhandled update requests
+
+  TopAbs_ShapeEnum m_SelectionMode;
 
 };
 

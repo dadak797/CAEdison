@@ -125,7 +125,8 @@ WasmOcctView& WasmOcctView::Instance()
 // ================================================================
 WasmOcctView::WasmOcctView()
 : myDevicePixelRatio (1.0f),
-  myUpdateRequests (0)
+  myUpdateRequests (0),
+    m_SelectionMode(TopAbs_SOLID)
 {
   addActionHotKeys (Aspect_VKey_NavForward,        Aspect_VKey_W, Aspect_VKey_W | Aspect_VKeyFlags_SHIFT);
   addActionHotKeys (Aspect_VKey_NavBackward ,      Aspect_VKey_S, Aspect_VKey_S | Aspect_VKeyFlags_SHIFT);
@@ -392,6 +393,7 @@ bool WasmOcctView::initViewer()
 
 	myContext->DefaultDrawer()->SetFaceBoundaryDraw(Standard_True);
 	myContext->SetDisplayMode(AIS_Shaded, Standard_False);
+
 
   return true;
 }
