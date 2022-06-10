@@ -2,3 +2,5 @@
 /node_modules
 /build-wasm/build
 /.vscode
+/src/views/occt-webgl-sample.js
+/src/views/occt-webgl-sample.wasm

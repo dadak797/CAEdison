@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 
-#include "WasmOcctView.h"
+#include "WasmOcctView.hpp"
 
 #include <AIS_Shape.hxx>
 #include <AIS_ViewCube.hxx>
@@ -51,6 +51,8 @@
 #include <XCAFDoc_ShapeTool.hxx>
 #include <XCAFDoc_DocumentTool.hxx>
 #include <TopTools_HSequenceOfShape.hxx>
+
+#include "AppManager.hpp"
 
 
 #define THE_CANVAS_ID "canvas"
@@ -829,13 +831,15 @@ void WasmOcctView::projectionOrthographic()
 // ================================================================
 void WasmOcctView::selectFaceMode()
 {
-    WasmOcctView& aViewer = Instance();
-    for (NCollection_IndexedDataMap<TCollection_AsciiString, Handle(AIS_InteractiveObject)>::Iterator anObjIter (aViewer.myObjects);
-         anObjIter.More(); anObjIter.Next())
-    {
-        aViewer.Context()->Deactivate(anObjIter.Value(), false);
-        aViewer.Context()->Activate(anObjIter.Value(), AIS_Shape::SelectionMode(TopAbs_FACE));
-    }
+    AppManager& app = AppManager::GetInstance();
+    app.SelectFaceMode();
+    // WasmOcctView& aViewer = Instance();
+    // for (NCollection_IndexedDataMap<TCollection_AsciiString, Handle(AIS_InteractiveObject)>::Iterator anObjIter (aViewer.myObjects);
+    //      anObjIter.More(); anObjIter.Next())
+    // {
+    //     aViewer.Context()->Deactivate(anObjIter.Value(), false);
+    //     aViewer.Context()->Activate(anObjIter.Value(), AIS_Shape::SelectionMode(TopAbs_FACE));
+    // }
 }
 
 
@@ -845,13 +849,15 @@ void WasmOcctView::selectFaceMode()
 // ================================================================
 void WasmOcctView::selectSolidMode()
 {
-    WasmOcctView& aViewer = Instance();
-    for (NCollection_IndexedDataMap<TCollection_AsciiString, Handle(AIS_InteractiveObject)>::Iterator anObjIter (aViewer.myObjects);
-         anObjIter.More(); anObjIter.Next())
-    {
-        aViewer.Context()->Deactivate(anObjIter.Value(), false);
-        aViewer.Context()->Activate(anObjIter.Value(), AIS_Shape::SelectionMode(TopAbs_SOLID));
-    }
+    AppManager& app = AppManager::GetInstance();
+    app.SelectSolidMode();
+    // WasmOcctView& aViewer = Instance();
+    // for (NCollection_IndexedDataMap<TCollection_AsciiString, Handle(AIS_InteractiveObject)>::Iterator anObjIter (aViewer.myObjects);
+    //      anObjIter.More(); anObjIter.Next())
+    // {
+    //     aViewer.Context()->Deactivate(anObjIter.Value(), false);
+    //     aViewer.Context()->Activate(anObjIter.Value(), AIS_Shape::SelectionMode(TopAbs_SOLID));
+    // }
 }
 
 
@@ -974,6 +980,17 @@ bool WasmOcctView::openSTEPFromMemory (const std::string& theName,
                                        uintptr_t theBuffer, int theDataLen,
                                        bool theToFree)
 {
+    AppManager& app = AppManager::GetInstance();
+
+    char* aRawData = reinterpret_cast<char*>(theBuffer);
+    Standard_ArrayStreamBuffer aStreamBuffer(aRawData, theDataLen);
+    std::istream aStream(&aStreamBuffer);
+
+    app.ImportGeometry(theName.c_str(), aStream, GeomFileType::STEP);    
+    fitAllObjects(true);
+
+    return true;
+  /*
   removeObject (theName);
 
   WasmOcctView& aViewer = Instance();
@@ -1041,6 +1058,9 @@ bool WasmOcctView::openSTEPFromMemory (const std::string& theName,
   Message::DefaultMessenger()->Send (TCollection_AsciiString("Loaded file ") + theName.c_str(), Message_Info);
   Message::DefaultMessenger()->Send (OSD_MemInfo::PrintInfo(), Message_Trace);
   return true;
+  */
+
+
 }
 
 // ================================================================

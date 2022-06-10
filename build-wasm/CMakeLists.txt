@@ -40,9 +40,17 @@ file(GLOB SOURCES
   *.cpp
 )
 source_group ("Headers" FILES
-  WasmOcctView.h)
+  WasmOcctView.hpp
+  GeometryManager.hpp
+  AppManager.hpp
+  Geometry.hpp
+  LCRSNode.hpp
+  LCRSTree.hpp)
 source_group ("Sources" FILES
   WasmOcctView.cpp
+  GeometryManager.cpp
+  AppManager.cpp
+  Geometry.cpp
   main.cpp)
 
 # FreeType

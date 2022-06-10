@@ -21,7 +21,8 @@
 
 #include <iostream>
 
-#include "WasmOcctView.h"
+#include "WasmOcctView.hpp"
+#include "AppManager.hpp"
 
 #include <Message.hxx>
 #include <Message_Messenger.hxx>
@@ -33,7 +34,6 @@
 #include <emscripten/html5.h>
 
 
-
 //! Dummy main loop callback for a single shot.
 extern "C" void onMainLoop()
 {
@@ -43,29 +43,32 @@ extern "C" void onMainLoop()
 
 EMSCRIPTEN_KEEPALIVE int main()
 {
-  Message::DefaultMessenger()->Printers().First()->SetTraceLevel (Message_Trace);
-  Handle(Message_PrinterSystemLog) aJSConsolePrinter = new Message_PrinterSystemLog ("webgl-sample", Message_Trace);
-  Message::DefaultMessenger()->AddPrinter (aJSConsolePrinter); // open JavaScript console within the Browser to see this output
-  Message::SendTrace() << "Emscripten SDK " << __EMSCRIPTEN_major__ << "." << __EMSCRIPTEN_minor__ << "." << __EMSCRIPTEN_tiny__;
+    Message::DefaultMessenger()->Printers().First()->SetTraceLevel (Message_Trace);
+    Handle(Message_PrinterSystemLog) aJSConsolePrinter = new Message_PrinterSystemLog ("webgl-sample", Message_Trace);
+    Message::DefaultMessenger()->AddPrinter (aJSConsolePrinter); // open JavaScript console within the Browser to see this output
+    Message::SendTrace() << "Emscripten SDK " << __EMSCRIPTEN_major__ << "." << __EMSCRIPTEN_minor__ << "." << __EMSCRIPTEN_tiny__;
 #if defined(__LP64__)
-  Message::SendTrace() << "Architecture: WASM 64-bit";
+    Message::SendTrace() << "Architecture: WASM 64-bit";
 #else
-  Message::SendTrace() << "Architecture: WASM 32-bit";
+    Message::SendTrace() << "Architecture: WASM 32-bit";
 #endif
-  Message::SendTrace() << "NbLogicalProcessors: "
-    << OSD_Parallel::NbLogicalProcessors()
+    Message::SendTrace() << "NbLogicalProcessors: "
+        << OSD_Parallel::NbLogicalProcessors()
 #ifdef __EMSCRIPTEN_PTHREADS__
-    << " (pthreads ON)"
+        << " (pthreads ON)"
 #else
-    << " (pthreads OFF)"
+        << " (pthreads OFF)"
 #endif
   ;
 
-  // setup a dummy single-shot main loop callback just to shut up a useless Emscripten error message on calling eglSwapInterval()
-  emscripten_set_main_loop (onMainLoop, -1, 0);
+    // Initialize Application
+    AppManager& appManager = AppManager::GetInstance();
 
-  WasmOcctView& aViewer = WasmOcctView::Instance();
-  aViewer.run();
-  Message::DefaultMessenger()->Send (OSD_MemInfo::PrintInfo(), Message_Trace);
-  return 0;
+    // setup a dummy single-shot main loop callback just to shut up a useless Emscripten error message on calling eglSwapInterval()
+    emscripten_set_main_loop (onMainLoop, -1, 0);
+
+    WasmOcctView& aViewer = WasmOcctView::Instance();
+    aViewer.run();
+    Message::DefaultMessenger()->Send (OSD_MemInfo::PrintInfo(), Message_Trace);
+    return 0;
 }
