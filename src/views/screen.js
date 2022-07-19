@@ -6,3 +6,11 @@ const handleFullscreen = () => {
 };
 
 fullScreenBtn.addEventListener("click", handleFullscreen);
+
+download_img = function(el) {
+    // get image URI from canvas object
+    let canvas = document.getElementById('occViewerCanvas');
+
+    var imageURI = canvas.toDataURL("image/jpg");
+    el.href = imageURI;
+};

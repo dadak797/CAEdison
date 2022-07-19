@@ -107,6 +107,8 @@ public: //! @name methods exported by Module
   static void selectFaceMode();
   static void selectSolidMode();
 
+  static void showScale();
+
 //! Open STEP object from memory.
   //! @param theName    [in] object name
   //! @param theBuffer  [in] pointer to data
@@ -276,7 +278,7 @@ private:
   unsigned int                   myUpdateRequests;   //!< counter for unhandled update requests
 
   TopAbs_ShapeEnum m_SelectionMode;
-
+  static bool m_bShowScale;
 };
 
 #endif // _WasmOcctView_HeaderFile

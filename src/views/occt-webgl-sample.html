@@ -55,10 +55,17 @@
                 type="button"
                 value="SelectSolidMode"
                 onclick="OccViewerModule.selectSolidMode()">
+            <input
+                type="button"
+                value="ShowScale"
+                onclick="OccViewerModule.showScale()">
         </div>
         <div>
-            <label for="stepfileInput">Choose STEP file to upload:
-            </label><input type="file" id="stepfileInput" accept=".stp,.step">
+            <label for="stepfileInput">Choose STEP file to upload:</label>
+            <input type="file" id="stepfileInput" accept=".stp,.step">
+        </div>
+        <div>
+            <a id="screenshot" download="ScreenShot.jpg" href="" onclick="download_img(this);">Download to ScreenShot.jpg</a>
         </div>
         <div>
             <button id="fullscreen">Enter Full Screen</button>
@@ -72,7 +79,7 @@
                 var aSizeX = Math.min(window.innerWidth, window.screen.availWidth);
                 var aSizeY = Math.min(window.innerHeight, window.screen.availHeight);
                 aSizeX = Math.max(300, aSizeX - 30);
-                aSizeY = Math.max(300, aSizeY - 150);
+                aSizeY = Math.max(300, aSizeY - 200);
                 occViewerCanvas.style.width = aSizeX + "px";
                 occViewerCanvas.style.height = aSizeY + "px";
 
