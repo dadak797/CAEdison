@@ -26,6 +26,7 @@ public:
     std::string GetName() const { return m_Name; }
     Quantity_Color GetColor() const { return m_Color; }
     Handle(AIS_ColoredShape) GetShape() const { return m_AISShape; }
+    bool HasShape() const;
 
     // Setters
     void SetColor(Quantity_Color color);

@@ -235,7 +235,8 @@ GeometryManager::GEOMETRY_NODE GeometryManager::AddGeometryToTree(const TDF_Labe
             //lastGeometryIndex++; // Index of The Root Geometry Is 0
             //geom.SetIndex(lastGeometryIndex);
 			//geometryTree->AddChild(node, geom);
-            //if (geom.GetShape()->Shape().ShapeType() == TopAbs_SOLID) {
+            //TopAbs_ShapeEnum shapeType = geom.GetShape()->Shape().ShapeType();
+            //if (shapeType == TopAbs_SOLID || shapeType == TopAbs_FACE) {
                 return m_pGeometryTree->InsertItem(geom, node);
             //}
             //else {
@@ -276,8 +277,22 @@ void GeometryManager::PrintIDName(GEOMETRY_NODE node, int depth) {
     TCollection_AsciiString lbr("["), rbr("]");
     TCollection_AsciiString id(node->GetData().GetID());
     TCollection_AsciiString name(node->GetData().GetName().c_str());
+    TCollection_AsciiString shType;
 
-    Message::DefaultMessenger()->Send(dash + name + lbr + id + rbr, Message_Info);
+    if (node->GetData().HasShape())
+    {
+        TopAbs_ShapeEnum type = node->GetData().GetShape()->Shape().ShapeType();
+        if (type == TopAbs_COMPOUND) shType = ", Compound";
+        else if (type == TopAbs_COMPSOLID) shType = ", CompSolid";
+        else if (type == TopAbs_SOLID) shType = ", Solid";
+        else if (type == TopAbs_SHELL) shType = ", Shell";
+        else if (type == TopAbs_FACE) shType = ", Face";
+        else if (type == TopAbs_WIRE) shType = ", Wire";
+        else if (type == TopAbs_EDGE) shType = ", Edge";
+        else if (type == TopAbs_VERTEX) shType = ", Vertex";
+    }        
+
+    Message::DefaultMessenger()->Send(dash + name + lbr + id + rbr + shType, Message_Info);
 }
 
 void GeometryManager::PrintAllGeometryName()
@@ -292,13 +307,13 @@ void GeometryManager::DisplayGeometry(GEOMETRY_NODE node, int depth)
 
     if (!shape.IsNull()) {
         const TopoDS_Shape aShape = shape->Shape();
-        if (aShape.ShapeType() == TopAbs_SOLID) {
+        if (aShape.ShapeType() == TopAbs_SOLID || aShape.ShapeType() == TopAbs_SHELL || aShape.ShapeType() == TopAbs_WIRE) {
             viewer.Context()->Display(shape, false);
         }
     }
 }
 
-void GeometryManager::DisplayAllGeometry()
+void GeometryManager::DisplayAllGeometry()  // Currently display solid only
 {
     m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::DisplayGeometry);
 }
@@ -310,7 +325,7 @@ void GeometryManager::SelectVertex(GEOMETRY_NODE node, int depth)
 
     if (!shape.IsNull()) {
         const TopoDS_Shape aShape = shape->Shape();
-        if (aShape.ShapeType() == TopAbs_SOLID) {
+        if (aShape.ShapeType() == TopAbs_SOLID || aShape.ShapeType() == TopAbs_SHELL || aShape.ShapeType() == TopAbs_WIRE) {
             viewer.Context()->Deactivate(shape, AIS_Shape::SelectionMode(viewer.GetSelectionMode()));
             viewer.Context()->Activate(shape, AIS_Shape::SelectionMode(TopAbs_VERTEX));
         }

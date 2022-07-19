@@ -45,6 +45,11 @@ Geometry& Geometry::operator=(Geometry&& other)
     other.m_AISShape = nullptr;
 }
 
+bool Geometry::HasShape() const
+{ 
+    return !m_AISShape.IsNull(); 
+}
+
 void Geometry::SetColor(Quantity_Color color)
 {
     m_Color = color;

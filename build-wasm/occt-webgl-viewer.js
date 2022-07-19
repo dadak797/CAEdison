@@ -24,5 +24,5 @@ var OccViewerModule =
 const OccViewerModuleInitialized = createOccViewerModule(OccViewerModule);
 OccViewerModuleInitialized.then(function(Module) {
   //OccViewerModule.setCubemapBackground ("cubemap.jpg");
-  OccViewerModule.openFromUrl ("ball", "samples/Ball.brep");
+  //OccViewerModule.openFromUrl ("ball", "samples/Ball.brep");
 });
