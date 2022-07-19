@@ -828,6 +828,28 @@ void WasmOcctView::projectionOrthographic()
 
 
 // ================================================================
+// Function : Select Vertex Mode
+// Purpose  :
+// ================================================================
+void WasmOcctView::selectVertexMode()
+{
+    AppManager& app = AppManager::GetInstance();
+    app.SelectVertexMode();
+}
+
+
+// ================================================================
+// Function : Select Edge Mode
+// Purpose  :
+// ================================================================
+void WasmOcctView::selectEdgeMode()
+{
+    AppManager& app = AppManager::GetInstance();
+    app.SelectEdgeMode();
+}
+
+
+// ================================================================
 // Function : Select Face Mode
 // Purpose  :
 // ================================================================
@@ -1185,6 +1207,8 @@ EMSCRIPTEN_BINDINGS(OccViewerModule) {
   emscripten::function("openSTEPFromMemory", &WasmOcctView::openSTEPFromMemory, emscripten::allow_raw_pointers());
   emscripten::function("projectionPerspective", &WasmOcctView::projectionPerspective);
   emscripten::function("projectionOrthographic", &WasmOcctView::projectionOrthographic);
+  emscripten::function("selectVertexMode", &WasmOcctView::selectVertexMode);
+  emscripten::function("selectEdgeMode", &WasmOcctView::selectEdgeMode);
   emscripten::function("selectFaceMode", &WasmOcctView::selectFaceMode);
   emscripten::function("selectSolidMode", &WasmOcctView::selectSolidMode);
 }

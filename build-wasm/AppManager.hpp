@@ -16,6 +16,9 @@ public:
     ~AppManager();
 
     void ImportGeometry(const char* fileName, std::istream& istream, GeomFileType fileType);
+    
+    void SelectVertexMode();
+    void SelectEdgeMode();
     void SelectFaceMode();
     void SelectSolidMode();
 

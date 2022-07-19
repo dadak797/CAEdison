@@ -303,6 +303,54 @@ void GeometryManager::DisplayAllGeometry()
     m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::DisplayGeometry);
 }
 
+void GeometryManager::SelectVertex(GEOMETRY_NODE node, int depth)
+{
+    Handle(AIS_ColoredShape) shape = node->GetData().GetShape();
+    WasmOcctView& viewer = WasmOcctView::Instance();
+
+    if (!shape.IsNull()) {
+        const TopoDS_Shape aShape = shape->Shape();
+        if (aShape.ShapeType() == TopAbs_SOLID) {
+            viewer.Context()->Deactivate(shape, AIS_Shape::SelectionMode(viewer.GetSelectionMode()));
+            viewer.Context()->Activate(shape, AIS_Shape::SelectionMode(TopAbs_VERTEX));
+        }
+    }
+}
+
+void GeometryManager::SelectVertexMode()
+{
+    m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::SelectVertex);
+
+    WasmOcctView& viewer = WasmOcctView::Instance();
+    viewer.SetSelectionMode(TopAbs_VERTEX);
+
+    Message::DefaultMessenger()->Send(TCollection_AsciiString("VertexMode"), Message_Info);
+}
+
+void GeometryManager::SelectEdge(GEOMETRY_NODE node, int depth)
+{
+    Handle(AIS_ColoredShape) shape = node->GetData().GetShape();
+    WasmOcctView& viewer = WasmOcctView::Instance();
+
+    if (!shape.IsNull()) {
+        const TopoDS_Shape aShape = shape->Shape();
+        if (aShape.ShapeType() == TopAbs_SOLID) {
+            viewer.Context()->Deactivate(shape, AIS_Shape::SelectionMode(viewer.GetSelectionMode()));
+            viewer.Context()->Activate(shape, AIS_Shape::SelectionMode(TopAbs_EDGE));
+        }
+    }
+}
+
+void GeometryManager::SelectEdgeMode()
+{
+    m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::SelectEdge);
+
+    WasmOcctView& viewer = WasmOcctView::Instance();
+    viewer.SetSelectionMode(TopAbs_EDGE);
+
+    Message::DefaultMessenger()->Send(TCollection_AsciiString("EdgeMode"), Message_Info);
+}
+
 void GeometryManager::SelectFace(GEOMETRY_NODE node, int depth)
 {
     Handle(AIS_ColoredShape) shape = node->GetData().GetShape();

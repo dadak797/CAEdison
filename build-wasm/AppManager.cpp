@@ -33,6 +33,16 @@ void AppManager::ImportGeometry(const char* fileName, std::istream& istream, Geo
     }
 }
 
+void AppManager::SelectVertexMode()
+{
+    m_pGeometryManager->SelectVertexMode();
+}
+
+void AppManager::SelectEdgeMode()
+{
+    m_pGeometryManager->SelectEdgeMode();
+}
+
 void AppManager::SelectFaceMode()
 {
     m_pGeometryManager->SelectFaceMode();

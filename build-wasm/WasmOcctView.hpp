@@ -101,6 +101,9 @@ public: //! @name methods exported by Module
 
   static void projectionPerspective();
   static void projectionOrthographic();
+
+  static void selectVertexMode();
+  static void selectEdgeMode();
   static void selectFaceMode();
   static void selectSolidMode();
 
