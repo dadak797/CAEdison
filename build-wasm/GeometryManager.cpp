@@ -19,6 +19,12 @@
 #include <AIS_ColoredShape.hxx>
 #include <Prs3d_LineAspect.hxx>
 #include <TDF_ChildIterator.hxx>
+#include <TopExp_Explorer.hxx>
+#include <TopoDS.hxx>
+#include <TopoDS_Vertex.hxx>
+#include <TopoDS_Edge.hxx>
+#include <TopoDS_Face.hxx>
+#include <TopExp.hxx>
 
 // Standard Libraries
 #include <iostream>
@@ -117,8 +123,6 @@ bool GeometryManager::LoadGeometryFromOCCDoc()
 	//TDF_Tool::Entry(mainLabel, entryStr);
     //Message::DefaultMessenger()->Send(entryStr.ToCString(), Message_Warning);
     Message::DefaultMessenger()->Send(GetEntryString(mainLabel).ToCString(), Message_Warning);
-
-    
     Message::DefaultMessenger()->Send(GetEntryString(shapeLabel).ToCString(), Message_Warning);
 
     return true;
@@ -295,9 +299,65 @@ void GeometryManager::PrintIDName(GEOMETRY_NODE node, int depth) {
     Message::DefaultMessenger()->Send(dash + name + lbr + id + rbr + shType, Message_Info);
 }
 
+void GeometryManager::PrintGeometryIndexMap(GEOMETRY_NODE node, int depth)
+{
+    Handle(AIS_ColoredShape) aisShape = node->GetData().GetShape();
+    const TopTools_IndexedMapOfShape* pFaceMap = node->GetData().GetFaceMap();
+    const TopTools_IndexedMapOfShape* pEdgeMap = node->GetData().GetEdgeMap();
+    const TopTools_IndexedMapOfShape* pVertexMap = node->GetData().GetVertexMap();
+
+    if (!aisShape.IsNull()) {
+        const TopoDS_Shape shape = aisShape->Shape();
+        if (!shape.IsNull()) {
+            if (shape.ShapeType() == TopAbs_SOLID) {
+                for (TopExp_Explorer face_iter(shape, TopAbs_FACE); face_iter.More(); face_iter.Next()) {
+                    TopoDS_Face TopoFace = TopoDS::Face(face_iter.Current());
+                    Standard_Integer faceIndex = pFaceMap->FindIndex(TopoFace);
+                    Message::DefaultMessenger()->Send(TCollection_AsciiString("Face Index: ") + TCollection_AsciiString(faceIndex), Message_Info);
+
+                    for (TopExp_Explorer Edge_It(TopoFace, TopAbs_EDGE); Edge_It.More(); Edge_It.Next()) {
+                        const TopoDS_Edge& TopoEdge = TopoDS::Edge(Edge_It.Current());
+                        Standard_Integer edgeIndex = pEdgeMap->FindIndex(TopoEdge);
+                        Message::DefaultMessenger()->Send(TCollection_AsciiString("- Edge Index: ") + TCollection_AsciiString(edgeIndex), Message_Info);
+
+                        const TopoDS_Vertex& TopoVertex1 = TopExp::FirstVertex(TopoEdge);
+                        const TopoDS_Vertex& TopoVertex2 = TopExp::LastVertex(TopoEdge);
+
+                        Standard_Integer Vertex_ID1 = pVertexMap->FindIndex(TopoVertex1);
+                        Standard_Integer Vertex_ID2 = pVertexMap->FindIndex(TopoVertex2);
+
+                        Message::DefaultMessenger()->Send(TCollection_AsciiString("-- Vertex1 Index: ") + TCollection_AsciiString(Vertex_ID1), Message_Info);
+                        Message::DefaultMessenger()->Send(TCollection_AsciiString("-- Vertex2 Index: ") + TCollection_AsciiString(Vertex_ID2), Message_Info);
+                    }
+                }
+                /*
+                auto itFace = pFaceMap->cbegin();
+                for (; itFace != pFaceMap->cend(); itFace++) {
+                    Standard_Integer faceIndex = pFaceMap->FindIndex(*itFace);
+                    Message::DefaultMessenger()->Send(TCollection_AsciiString("Face Index: ") + TCollection_AsciiString(faceIndex), Message_Info);
+                }
+
+                auto itEdge = pEdgeMap->cbegin();
+                for (; itEdge != pEdgeMap->cend(); itEdge++) {
+                    Standard_Integer edgeIndex = pEdgeMap->FindIndex(*itEdge);
+                    Message::DefaultMessenger()->Send(TCollection_AsciiString("Edge Index: ") + TCollection_AsciiString(edgeIndex), Message_Info);
+                }
+
+                auto itVertex = pVertexMap->cbegin();
+                for (; itVertex != pVertexMap->cend(); itVertex++) {
+                    Standard_Integer vertexIndex = pVertexMap->FindIndex(*itVertex);
+                    Message::DefaultMessenger()->Send(TCollection_AsciiString("Vertex Index: ") + TCollection_AsciiString(vertexIndex), Message_Info);
+                }
+                */
+            }
+        }
+    }
+}
+
 void GeometryManager::PrintAllGeometryName()
 {
     m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::PrintIDName);
+    //m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::PrintGeometryIndexMap);
 }
 
 void GeometryManager::DisplayGeometry(GEOMETRY_NODE node, int depth)
@@ -307,7 +367,7 @@ void GeometryManager::DisplayGeometry(GEOMETRY_NODE node, int depth)
 
     if (!shape.IsNull()) {
         const TopoDS_Shape aShape = shape->Shape();
-        if (aShape.ShapeType() == TopAbs_SOLID || aShape.ShapeType() == TopAbs_SHELL || aShape.ShapeType() == TopAbs_WIRE) {
+        if (aShape.ShapeType() == TopAbs_SOLID/* || aShape.ShapeType() == TopAbs_SHELL || aShape.ShapeType() == TopAbs_WIRE*/) {
             viewer.Context()->Display(shape, false);
         }
     }
@@ -318,6 +378,25 @@ void GeometryManager::DisplayAllGeometry()  // Currently display solid only
     m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::DisplayGeometry);
 }
 
+void GeometryManager::CreateGeometryIndexMap(GEOMETRY_NODE node, int depth)
+{
+    Handle(AIS_ColoredShape) shape = node->GetData().GetShape();
+    Geometry& geometry = node->GetData();
+
+    if (!shape.IsNull()) {
+        const TopoDS_Shape aShape = shape->Shape();
+        if (aShape.ShapeType() == TopAbs_SOLID/* || aShape.ShapeType() == TopAbs_SHELL || aShape.ShapeType() == TopAbs_WIRE*/) {
+            geometry.CreateIndexedMap();
+            //Message::DefaultMessenger()->Send(TCollection_AsciiString("Index map created!"), Message_Info);
+        }
+    }
+}
+
+void GeometryManager::CreateAllGeometryIndexMap()
+{
+    m_pGeometryTree->LoopTree(m_pGeometryTree->GetRoot(), GeometryManager::CreateGeometryIndexMap);
+}
+
 void GeometryManager::SelectVertex(GEOMETRY_NODE node, int depth)
 {
     Handle(AIS_ColoredShape) shape = node->GetData().GetShape();
@@ -325,7 +404,7 @@ void GeometryManager::SelectVertex(GEOMETRY_NODE node, int depth)
 
     if (!shape.IsNull()) {
         const TopoDS_Shape aShape = shape->Shape();
-        if (aShape.ShapeType() == TopAbs_SOLID || aShape.ShapeType() == TopAbs_SHELL || aShape.ShapeType() == TopAbs_WIRE) {
+        if (aShape.ShapeType() == TopAbs_SOLID/* || aShape.ShapeType() == TopAbs_SHELL || aShape.ShapeType() == TopAbs_WIRE*/) {
             viewer.Context()->Deactivate(shape, AIS_Shape::SelectionMode(viewer.GetSelectionMode()));
             viewer.Context()->Activate(shape, AIS_Shape::SelectionMode(TopAbs_VERTEX));
         }

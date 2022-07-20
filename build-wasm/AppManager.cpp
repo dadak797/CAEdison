@@ -28,8 +28,9 @@ void AppManager::ImportGeometry(const char* fileName, std::istream& istream, Geo
     }
     else if (fileType == GeomFileType::STEP) {
         m_pGeometryManager->ImportStepFile(fileName, istream);
-        m_pGeometryManager->PrintAllGeometryName();
         m_pGeometryManager->DisplayAllGeometry();
+        m_pGeometryManager->CreateAllGeometryIndexMap();
+        m_pGeometryManager->PrintAllGeometryName();
     }
 }
 

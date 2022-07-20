@@ -13,6 +13,10 @@ public:
         DeleteNode(m_Sibling);
     }
 
+    T& GetData() {
+        return m_Data;
+    }
+
     const T& GetData() const {
         return m_Data;
     }

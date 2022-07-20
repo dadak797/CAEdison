@@ -21,6 +21,7 @@ public:
     bool ImportStepFile(const char* fileName, std::istream& istream);
     void PrintAllGeometryName();
     void DisplayAllGeometry();
+    void CreateAllGeometryIndexMap();
 
     void SelectVertexMode();
     void SelectEdgeMode();
@@ -44,7 +45,9 @@ private:
 
     // For Looping Geometry Tree
     static void PrintIDName(GEOMETRY_NODE node, int depth);
+    static void PrintGeometryIndexMap(GEOMETRY_NODE node, int depth);
     static void DisplayGeometry(GEOMETRY_NODE node, int depth);
+    static void CreateGeometryIndexMap(GEOMETRY_NODE node, int depth);
 
     static void SelectVertex(GEOMETRY_NODE node, int depth);
     static void SelectEdge(GEOMETRY_NODE node, int depth);
