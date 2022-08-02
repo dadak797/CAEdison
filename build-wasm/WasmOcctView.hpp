@@ -29,7 +29,9 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
+
 class AIS_ViewCube;
+
 
 //! Sample class creating 3D Viewer within Emscripten canvas.
 class WasmOcctView : protected AIS_ViewController

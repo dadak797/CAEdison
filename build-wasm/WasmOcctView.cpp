@@ -547,12 +547,32 @@ EM_JS(int, jsGetBoundingClientLeft, (), {
 // ================================================================
 EM_BOOL WasmOcctView::onMouseEvent (int theEventType, const EmscriptenMouseEvent* theEvent)
 {
-  if (myView.IsNull())
-  {
-    return EM_FALSE;
-  }
+    EmscriptenMouseEvent anEvent = *theEvent;
 
-  Handle(Wasm_Window) aWindow = Handle(Wasm_Window)::DownCast (myView->Window());
+    if (myView.IsNull())
+    {
+      return EM_FALSE;
+    }
+
+    Handle(Wasm_Window) aWindow = Handle(Wasm_Window)::DownCast (myView->Window());
+
+    if (theEventType == EMSCRIPTEN_EVENT_MOUSEUP) {
+        Standard_Integer btnNumber = (Standard_Integer)anEvent.button;
+
+        if (btnNumber == 0)  // L-Button
+        {
+            Message::DefaultMessenger()->Send(TCollection_AsciiString("L-Button Clicked!"), Message_Info);
+        }
+        else if (btnNumber == 1)  // Scroll-Button
+        {
+            Message::DefaultMessenger()->Send(TCollection_AsciiString("Scroll-Button Clicked!"), Message_Info);
+        }
+        else if (btnNumber == 2)  // R-Button
+        {
+            Message::DefaultMessenger()->Send(TCollection_AsciiString("R-Button Clicked!"), Message_Info);
+        }
+    }
+
   if (theEventType == EMSCRIPTEN_EVENT_MOUSEMOVE
    || theEventType == EMSCRIPTEN_EVENT_MOUSEUP)
   {
